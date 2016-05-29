@@ -13,18 +13,21 @@
   background-color: beige;
   border-bottom: 2px solid black;
   overflow-y: scroll;
+  border-spacing: 1px;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
 }
-
 .ccm-item-verwaltung > #main > .header > .header > .title{
   font-size: 115%;
   font-weight: bold;
   padding: 0.5em;
+  top: 2em;
 }
 .ccm-item-verwaltung > #main > .items-input {
   padding: 0.5em;
 }
 
-.ccm-item-verwaltung > #main > .header > .header > #text1 {
+.ccm-item-verwaltung > #main > .header > .header > #header-text {
   display: table-cell;
 }
 .ccm-item-verwaltung > #main > .items > .item{
@@ -36,5 +39,7 @@
 .ccm-item-verwaltung > #main > .items > .item > .text{
   display: table-cell;
 }
+
+
 
 

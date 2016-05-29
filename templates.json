@@ -8,7 +8,7 @@
       {
         "tag": "text",
         "class": "title",
-        "id": "text1",
+        "id": "header-text",
         "inner": "%text%"
       }
     ]

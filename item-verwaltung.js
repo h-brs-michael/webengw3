@@ -1,4 +1,3 @@
-/** blank.js */
 ccm.component( {
 
   name: 'item-verwaltung',
@@ -6,32 +5,39 @@ ccm.component( {
     html:  [ ccm.store, { local: 'templates.json' } ],
     key:  'item-verwaltung-key',
     style: [ ccm.load, 'item-verwaltung.css' ],
-    store: [ ccm.store , { url: 'ws://ccm2.inf.h-brs.de/index.js', store: 'item-verwaltung' } ],
-    user:  [ ccm.instance, 'http://kaul.inf.h-brs.de/ccm/components/user.js' ]
+    user:  [ ccm.instance, 'http://kaul.inf.h-brs.de/ccm/components/user2.js' ],
+    store: [ ccm.store , { url: 'ws://ccm2.inf.h-brs.de/index.js', store: 'item-verwaltung'} ],
   },
 
   Instance: function () {
 
     var self = this;
+    var login = null;
 
     //init:
     self.init = function ( callback ) {
       self.store.onChange = function () {
         self.render();
       };
+
       callback();
-    };
+    }
 
     //render:
     self.render = function ( callback ) {
 
       var element = ccm.helper.element( self );
-      
-      self.store.get( self.key, function ( dataset ) {
+
+      //Login:
+      self.user.login( function () {  // Nutzung der user-Instanz für Authentifizierung
+
+        var login = self.user.data().key;
+
+      self.store.get( self.key+login, function ( dataset ) {
         if (dataset === null) {
           console.log("store = null");
           self.store.set({
-            key: self.key,
+            key: self.key+login,
             items: []
           }, proceed);
         } else {
@@ -46,19 +52,15 @@ ccm.component( {
 
           header_div.append(ccm.helper.html( self.html.get( 'header' ), {
 
-            text: "Items von "/*+self.user.data().key*/
+            text: "Items von "+login
 
           }) );
-
-
 
           //items hinzufügen
           var items_div = ccm.helper.find( self, '.items' );
 
-          console.log("length: "+dataset.items.length);
-
           for ( var i = 0; i < dataset.items.length; i++ ) {
-            console.log("add item: "+i);
+
             var item = dataset.items[ i ];
             items_div.append( ccm.helper.html( self.html.get( 'item' ), {
 
@@ -68,17 +70,11 @@ ccm.component( {
 
               onclick: function () {
 
-                console.log("checkbox is clicked");
-                //console.log("box: "+ccm.helper.find(self, "#2"));
-                //console.log(id);
-                console.log(this.id);
+                console.log("clicked: "+this.id);
 
                 if(this.id != -1) {
                   dataset.items.splice(this.id, 1);
                 }
-
-                //dataset.items.pop();
-                console.log(dataset.items);
 
                 self.store.set( dataset, function () { self.render(); } );
 
@@ -93,13 +89,9 @@ ccm.component( {
           items_div.append ( ccm.helper.html( self.html.get( 'input' ), {
             onsubmit: function () {
 
-              console.log("button");
-              //console.log(ccm.helper.val( ccm.helper.find(self, '#input-text') ).val().trim());
               var value = ccm.helper.val( ccm.helper.find( self, '#input-text' ).val().trim() );
-              console.log("value: "+value);
               if ( value === '' ) return false;
 
-              console.log("button value: "+value);
               dataset.items.push( { text: value } );
 
               self.store.set( dataset, function () { self.render(); } );
@@ -111,8 +103,10 @@ ccm.component( {
           if ( callback ) callback();
         }
 
+        //login end
       })
 
+    } );
     }
 
   },

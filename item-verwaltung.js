@@ -27,6 +27,7 @@ ccm.component( {
     self.render = function ( callback ) {
 
       var element = ccm.helper.element( self );
+      element.html("<h2>Login Required</h2>");
 
       //Login:
       self.user.login( function () {  // Nutzung der user-Instanz für Authentifizierung
